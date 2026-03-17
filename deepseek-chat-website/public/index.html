@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoloChat风格聊天 - 尊贵的VIP用户专用</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h2>HoloChat</h2>
+                </div>
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i> 新对话
+                </button>
+            </div>
+            
+            <div class="chat-history">
+                <h3>历史对话</h3>
+                <ul id="chatHistory">
+                    <!-- 动态生成历史对话 -->
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>尊贵的VIP用户</span>
+                </div>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i> 设置
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主聊天区域 -->
+        <main class="main-content">
+            <!-- 顶部导航 -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <h1 id="currentChatTitle">新对话</h1>
+                    <div class="model-info">
+                        <span class="model-badge">HoloChat</span>
+                        <span class="model-version">最新版本</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status connected">
+                        <i class="fas fa-circle"></i>
+                        <span>已连接</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 消息容器 -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- 初始欢迎消息 -->
+                <div class="message assistant">
+                    <div class="avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="content">
+                        <div class="sender">HoloChat</div>
+                        <div class="text">
+                            你好！我是基于HoloChat AI的聊天，专为尊贵的VIP用户设计。
+                            有什么问题可以随时问我，我会尽力帮助你！
+                        </div>
+                        <div class="timestamp">刚刚</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="输入你的消息...（Shift+Enter换行，Enter发送）" 
+                        rows="1"
+                        autofocus
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="action-btn" title="上传文件">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="action-btn" title="清除对话">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button class="send-btn" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            发送
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-footer">
+                    <div class="hints">
+                        <span class="hint">
+                            <i class="fas fa-lightbulb"></i>
+                            尝试提问："如何学习编程？"
+                        </span>
+                        <span class="hint">
+                            <i class="fas fa-lightbulb"></i>
+                            "帮我写一段Python代码"
+                        </span>
+                    </div>
+                    <div class="usage-info">
+                        <span id="tokenCount">0 tokens</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 设置面板（隐藏） -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <h3>设置</h3>
+                <button class="close-settings" id="closeSettingsBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <h4>API设置</h4>
+                    <div class="setting-item">
+                        <label for="apiEndpoint">API端点</label>
+                        <input type="text" id="apiEndpoint" value="/api/chat" readonly>
+                        <small>后端代理地址，保护API密钥安全</small>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h4>对话设置</h4>
+                    <div class="setting-item">
+                        <label for="maxTokens">最大响应长度</label>
+                        <select id="maxTokens">
+                            <option value="500">短 (500 tokens)</option>
+                            <option value="1000" selected>中 (1000 tokens)</option>
+                            <option value="2000">长 (2000 tokens)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="temperature">创造性</label>
+                        <input type="range" id="temperature" min="0" max="20" value="7">
+                        <span id="temperatureValue">0.7</span>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h4>界面设置</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="darkMode" checked>
+                            暗色模式
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="soundEffects">
+                            音效提示
+                        </label>
+                    </div>
+                </div>
+                <button class="save-settings-btn" id="saveSettingsBtn">
+                    保存设置
+                </button>
+            </div>
+        </div>
+
+        <!-- 密码保护模态框（可选） -->
+        <div class="password-modal" id="passwordModal">
+            <div class="modal-content">
+                <h3>尊贵的VIP用户专用聊天</h3>
+                <p>请输入访问密码（如需密码保护）</p>
+                <input type="password" id="passwordInput" placeholder="输入密码">
+                <button id="submitPasswordBtn">进入聊天</button>
+                <p class="hint">如果没有设置密码，直接点击进入</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>正在思考中...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
